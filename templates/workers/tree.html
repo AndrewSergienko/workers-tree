@@ -1,3 +1,79 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" type="text/css" href="{% static "tree.css" %}">
+{% endblock %}
 {% block title %}Workers Tree{% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+    <ul id="workers-tree">
+        <li class="undecorated has-children" id="{{ director.id }}">{{ director.full_name }}
+            <ul >
+                {% for worker in workers %}
+                    <li id="{{ worker.id }}" {% if not worker.is_leaf_node %}class="undecorated has-children"{% endif %}>
+                        {{ worker.full_name }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
+{% block script %}
+    <script>
+        const openedClass = 'bi-dash-circle';
+        const closedClass = 'bi-plus-circle';
+        let tree;
+
+        $.fn.extend({
+        treed: function (o) {
+
+            //initialize each of the top levels
+            tree = $(this);
+            tree.addClass("tree");
+            tree.find('.undecorated.has-children').each(decorate_elem);
+            //fire event from the dynamically added icon
+            tree.find('.branch .indicator').each(set_click_event_to_icon);
+        }
+        });
+        function decorate_elem(){
+              // Видача іконок всим елементам, які мають дочірні елементи
+                const branch = $(this); //li with children ul
+                branch.prepend("<i class='indicator bi " + closedClass + "'></i>");
+                branch.addClass('branch');
+                branch.on('click', function (e) {
+                    console.log(e)
+                    if (this === e.target) {
+                        if(!$(this).children('ul')[0]){
+                            add_children($(this).attr('id'))
+                        }
+                        const icon = $(this).children('i:first');
+                        icon.toggleClass(openedClass + " " + closedClass);
+                        $(this).children().children().toggle();
+                    }
+                })
+                branch.children().children().toggle();
+                // undecorated клас позначає, що елемент ще не був оброблений
+                branch.removeClass("undecorated")
+        }
+        function add_children(id){
+            $.ajax({
+                url: `/${id}/children/`,
+                context: $( `#${id}`),
+                success: function(data){
+                    $(this).append(data)
+                    tree.find('.undecorated.has-children').each(decorate_elem);
+                    tree.find('.branch .indicator').each(set_click_event_to_icon);
+                }
+            });
+        }
+        function set_click_event_to_icon(){
+            $(this).unbind('click')
+            $(this).on('click', function () {
+                $(this).closest('li').click();
+            });
+        }
+    </script>
+    <script>
+        $('#workers-tree').treed();
+    </script>
+{% endblock %}

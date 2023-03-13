@@ -1,0 +1,7 @@
+<ul>
+    {% for child in children %}
+        <li id="{{ child.id }}" {% if not child.is_leaf_node %}class="undecorated has-children"{% endif %}>
+            {{ child.full_name }}
+        </li>
+    {% endfor %}
+</ul>

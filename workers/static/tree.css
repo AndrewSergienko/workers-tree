@@ -1,3 +1,11 @@
+p{
+    margin: 0;
+    height: 25px;
+}
+i{
+    display: flex;
+    align-items: center;
+}
 .tree, .tree ul {
     margin:0;
     padding:0;
@@ -23,10 +31,9 @@
 .tree li {
     margin:0;
     padding:0 1em;
-    line-height:2em;
     color:#369;
     font-weight:700;
-    position:relative
+    position:relative;
 }
 .tree ul li:before {
     content:"";
@@ -34,7 +41,7 @@
     width:10px;
     height:0;
     border-top:1px solid;
-    margin-top:-1px;
+    margin-top:27px;
     position:absolute;
     top:1em;
     left:0
@@ -57,10 +64,18 @@
     color:#369;
     border:none;
     background:transparent;
-    margin:0px 0px 0px 0px;
-    padding:0px 0px 0px 0px;
+    margin:0 0 0 0;
+    padding:0 0 0 0;
     outline: 0;
 }
 .has-children{
     cursor: pointer;
+}
+.worker-info{
+    padding: 5px 7px;
+    border-radius: 10px;
+}
+.worker-container{
+    display: flex;
+    margin-bottom: 20px;
 }

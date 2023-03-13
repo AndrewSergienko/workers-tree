@@ -6,12 +6,26 @@
 {% endblock %}
 {% block title %}Workers Tree{% endblock %}
 {% block content %}
+    <h1 style="text-align: center">Дерево працівників</h1>
     <ul id="workers-tree">
-        <li class="undecorated has-children" id="{{ director.id }}">{{ director.full_name }}
+        <li class="undecorated has-children" id="{{ director.id }}">
+            <div class="worker-container" style="padding-left: 10px">
+                <div class="worker-info card">
+                    <p>{{ director.full_name }}</p>
+                    <p>{{ director.get_position_display }}</p>
+                    <p>{{ director.date_of_employment }}</p>
+                </div>
+            </div>
             <ul >
                 {% for worker in workers %}
                     <li id="{{ worker.id }}" {% if not worker.is_leaf_node %}class="undecorated has-children"{% endif %}>
-                        {{ worker.full_name }}
+                        <div class="worker-container">
+                            <div class="worker-info card">
+                                <p>{{ worker.full_name }}</p>
+                                <p>{{ worker.get_position_display }}</p>
+                                <p>{{ worker.date_of_employment }}</p>
+                            </div>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
@@ -20,8 +34,8 @@
 {% endblock %}
 {% block script %}
     <script>
-        const openedClass = 'bi-dash-circle';
-        const closedClass = 'bi-plus-circle';
+        const openedClass = 'bi-plus-circle';
+        const closedClass = 'bi-dash-circle';
         let tree;
 
         $.fn.extend({
@@ -38,20 +52,19 @@
         function decorate_elem(){
               // Видача іконок всим елементам, які мають дочірні елементи
                 const branch = $(this); //li with children ul
-                branch.prepend("<i class='indicator bi " + closedClass + "'></i>");
+                branch.children("div").prepend("<i class='indicator bi " + openedClass + "'></i>");
                 branch.addClass('branch');
                 branch.on('click', function (e) {
-                    console.log(e)
                     if (this === e.target) {
                         if(!$(this).children('ul')[0]){
                             add_children($(this).attr('id'))
                         }
-                        const icon = $(this).children('i:first');
+                        const icon = $(this).children().children('i:first');
                         icon.toggleClass(openedClass + " " + closedClass);
-                        $(this).children().children().toggle();
+                        $(this).children("ul").children().toggle();
                     }
                 })
-                branch.children().children().toggle();
+                branch.children("ul").children().toggle();
                 // undecorated клас позначає, що елемент ще не був оброблений
                 branch.removeClass("undecorated")
         }

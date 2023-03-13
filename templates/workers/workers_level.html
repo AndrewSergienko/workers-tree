@@ -1,7 +1,13 @@
 <ul>
     {% for child in children %}
         <li id="{{ child.id }}" {% if not child.is_leaf_node %}class="undecorated has-children"{% endif %}>
-            {{ child.full_name }}
+            <div class="worker-container">
+                <div class="worker-info card">
+                    <p>{{ child.full_name }}</p>
+                    <p>{{ child.get_position_display }}</p>
+                    <p>{{ child.date_of_employment }}</p>
+                </div>
+            </div>
         </li>
     {% endfor %}
 </ul>

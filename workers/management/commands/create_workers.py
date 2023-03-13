@@ -10,6 +10,10 @@ class Command(BaseCommand):
     help = "Creating Worker models"
 
     def handle(self, *args, **kwargs):
+        """Записування у базу даних записів моделей Worker"""
+        # Загалом, з такими параметрами створюється 56917 записів
+        # Через особливості збереження об'єктів моделей django-mptt, запис йде дуже довго (~30хв)
+
         position_num_ranges = (
             4,
             4,
